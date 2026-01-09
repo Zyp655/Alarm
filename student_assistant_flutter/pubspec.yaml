@@ -27,6 +27,8 @@ dependencies:
   cupertino_icons: ^1.0.5
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.1.1
+  equatable: ^2.0.5
   student_assistant_client:
     path: ../student_assistant_client
   serverpod_flutter: 3.1.1

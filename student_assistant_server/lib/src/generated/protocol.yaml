@@ -8,5 +8,9 @@ emailIdp:
   - finishPasswordReset:
 jwtRefresh:
   - refreshAccessToken:
+subject:
+  - getSubjects:
+  - addSubject:
+  - updateAbsence:
 greeting:
   - hello:
