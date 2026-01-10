@@ -296,6 +296,44 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['subject'],
                   ),
         ),
+        'updateSubject': _i1.MethodConnector(
+          name: 'updateSubject',
+          params: {
+            'subject': _i1.ParameterDescription(
+              name: 'subject',
+              type: _i1.getType<_i6.Subject>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['subject'] as _i4.SubjectEndpoint).updateSubject(
+                    session,
+                    params['subject'],
+                  ),
+        ),
+        'deleteSubject': _i1.MethodConnector(
+          name: 'deleteSubject',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['subject'] as _i4.SubjectEndpoint).deleteSubject(
+                    session,
+                    params['id'],
+                  ),
+        ),
       },
     );
     connectors['greeting'] = _i1.EndpointConnector(

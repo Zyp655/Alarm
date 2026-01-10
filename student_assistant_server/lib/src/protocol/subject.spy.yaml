@@ -3,7 +3,7 @@ table: subject
 fields:
   name: String
   teacherName: String?
-  credits: int # Số tín chỉ
-  requiredAttendance: int # Tổng số buổi học bắt buộc
-  absentCount: int # Số buổi đã nghỉ (mặc định là 0)
-  targetScore: double? # Điểm mục tiêu
+  credits: int
+  requiredAttendance: int
+  absentCount: int
+  targetScore: double?

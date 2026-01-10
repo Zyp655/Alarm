@@ -12,5 +12,7 @@ subject:
   - getSubjects:
   - addSubject:
   - updateAbsence:
+  - updateSubject:
+  - deleteSubject:
 greeting:
   - hello:

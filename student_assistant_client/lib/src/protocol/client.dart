@@ -262,6 +262,19 @@ class EndpointSubject extends _i2.EndpointRef {
         'updateAbsence',
         {'subject': subject},
       );
+
+  _i3.Future<bool> updateSubject(_i5.Subject subject) =>
+      caller.callServerEndpoint<bool>(
+        'subject',
+        'updateSubject',
+        {'subject': subject},
+      );
+
+  _i3.Future<bool> deleteSubject(int id) => caller.callServerEndpoint<bool>(
+    'subject',
+    'deleteSubject',
+    {'id': id},
+  );
 }
 
 /// This is an example endpoint that returns a greeting message through
