@@ -22,6 +22,7 @@ abstract class Subject
     required this.requiredAttendance,
     required this.absentCount,
     this.targetScore,
+    this.color,
   });
 
   factory Subject({
@@ -32,6 +33,7 @@ abstract class Subject
     required int requiredAttendance,
     required int absentCount,
     double? targetScore,
+    String? color,
   }) = _SubjectImpl;
 
   factory Subject.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -43,6 +45,7 @@ abstract class Subject
       requiredAttendance: jsonSerialization['requiredAttendance'] as int,
       absentCount: jsonSerialization['absentCount'] as int,
       targetScore: (jsonSerialization['targetScore'] as num?)?.toDouble(),
+      color: jsonSerialization['color'] as String?,
     );
   }
 
@@ -65,6 +68,8 @@ abstract class Subject
 
   double? targetScore;
 
+  String? color;
+
   @override
   _i1.Table<int?> get table => t;
 
@@ -79,6 +84,7 @@ abstract class Subject
     int? requiredAttendance,
     int? absentCount,
     double? targetScore,
+    String? color,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -91,6 +97,7 @@ abstract class Subject
       'requiredAttendance': requiredAttendance,
       'absentCount': absentCount,
       if (targetScore != null) 'targetScore': targetScore,
+      if (color != null) 'color': color,
     };
   }
 
@@ -105,6 +112,7 @@ abstract class Subject
       'requiredAttendance': requiredAttendance,
       'absentCount': absentCount,
       if (targetScore != null) 'targetScore': targetScore,
+      if (color != null) 'color': color,
     };
   }
 
@@ -149,6 +157,7 @@ class _SubjectImpl extends Subject {
     required int requiredAttendance,
     required int absentCount,
     double? targetScore,
+    String? color,
   }) : super._(
          id: id,
          name: name,
@@ -157,6 +166,7 @@ class _SubjectImpl extends Subject {
          requiredAttendance: requiredAttendance,
          absentCount: absentCount,
          targetScore: targetScore,
+         color: color,
        );
 
   /// Returns a shallow copy of this [Subject]
@@ -171,6 +181,7 @@ class _SubjectImpl extends Subject {
     int? requiredAttendance,
     int? absentCount,
     Object? targetScore = _Undefined,
+    Object? color = _Undefined,
   }) {
     return Subject(
       id: id is int? ? id : this.id,
@@ -180,6 +191,7 @@ class _SubjectImpl extends Subject {
       requiredAttendance: requiredAttendance ?? this.requiredAttendance,
       absentCount: absentCount ?? this.absentCount,
       targetScore: targetScore is double? ? targetScore : this.targetScore,
+      color: color is String? ? color : this.color,
     );
   }
 }
@@ -216,6 +228,11 @@ class SubjectUpdateTable extends _i1.UpdateTable<SubjectTable> {
     table.targetScore,
     value,
   );
+
+  _i1.ColumnValue<String, String> color(String? value) => _i1.ColumnValue(
+    table.color,
+    value,
+  );
 }
 
 class SubjectTable extends _i1.Table<int?> {
@@ -245,6 +262,10 @@ class SubjectTable extends _i1.Table<int?> {
       'targetScore',
       this,
     );
+    color = _i1.ColumnString(
+      'color',
+      this,
+    );
   }
 
   late final SubjectUpdateTable updateTable;
@@ -261,6 +282,8 @@ class SubjectTable extends _i1.Table<int?> {
 
   late final _i1.ColumnDouble targetScore;
 
+  late final _i1.ColumnString color;
+
   @override
   List<_i1.Column> get columns => [
     id,
@@ -270,6 +293,7 @@ class SubjectTable extends _i1.Table<int?> {
     requiredAttendance,
     absentCount,
     targetScore,
+    color,
   ];
 }
 

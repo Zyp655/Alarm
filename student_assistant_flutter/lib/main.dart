@@ -9,17 +9,11 @@ import 'features/subject/views/subject_screen.dart';
 
 late final Client client;
 
-late String serverUrl;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  const serverUrlFromEnv = String.fromEnvironment('SERVER_URL');
-
   final config = await AppConfig.loadConfig();
-  final serverUrl = serverUrlFromEnv.isEmpty
-      ? config.apiUrl ?? 'http://$localhost:8080/'
-      : serverUrlFromEnv;
+  final String serverUrl = config.apiUrl ?? 'http://localhost:8080/';
 
   client = Client(serverUrl)
     ..connectivityMonitor = FlutterConnectivityMonitor()
@@ -38,6 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Student Assistant',
       theme: ThemeData(primarySwatch: Colors.blue),
+      debugShowCheckedModeBanner: false,
       home: BlocProvider(
         create: (context) => SubjectBloc()..add(LoadSubjects()),
         child: SubjectScreen(),

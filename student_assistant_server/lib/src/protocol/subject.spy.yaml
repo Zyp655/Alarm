@@ -7,3 +7,4 @@ fields:
   requiredAttendance: int
   absentCount: int
   targetScore: double?
+  color: String?

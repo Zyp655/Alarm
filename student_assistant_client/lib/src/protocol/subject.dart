@@ -21,6 +21,7 @@ abstract class Subject implements _i1.SerializableModel {
     required this.requiredAttendance,
     required this.absentCount,
     this.targetScore,
+    this.color,
   });
 
   factory Subject({
@@ -31,6 +32,7 @@ abstract class Subject implements _i1.SerializableModel {
     required int requiredAttendance,
     required int absentCount,
     double? targetScore,
+    String? color,
   }) = _SubjectImpl;
 
   factory Subject.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -42,6 +44,7 @@ abstract class Subject implements _i1.SerializableModel {
       requiredAttendance: jsonSerialization['requiredAttendance'] as int,
       absentCount: jsonSerialization['absentCount'] as int,
       targetScore: (jsonSerialization['targetScore'] as num?)?.toDouble(),
+      color: jsonSerialization['color'] as String?,
     );
   }
 
@@ -62,6 +65,8 @@ abstract class Subject implements _i1.SerializableModel {
 
   double? targetScore;
 
+  String? color;
+
   /// Returns a shallow copy of this [Subject]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -73,6 +78,7 @@ abstract class Subject implements _i1.SerializableModel {
     int? requiredAttendance,
     int? absentCount,
     double? targetScore,
+    String? color,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -85,6 +91,7 @@ abstract class Subject implements _i1.SerializableModel {
       'requiredAttendance': requiredAttendance,
       'absentCount': absentCount,
       if (targetScore != null) 'targetScore': targetScore,
+      if (color != null) 'color': color,
     };
   }
 
@@ -105,6 +112,7 @@ class _SubjectImpl extends Subject {
     required int requiredAttendance,
     required int absentCount,
     double? targetScore,
+    String? color,
   }) : super._(
          id: id,
          name: name,
@@ -113,6 +121,7 @@ class _SubjectImpl extends Subject {
          requiredAttendance: requiredAttendance,
          absentCount: absentCount,
          targetScore: targetScore,
+         color: color,
        );
 
   /// Returns a shallow copy of this [Subject]
@@ -127,6 +136,7 @@ class _SubjectImpl extends Subject {
     int? requiredAttendance,
     int? absentCount,
     Object? targetScore = _Undefined,
+    Object? color = _Undefined,
   }) {
     return Subject(
       id: id is int? ? id : this.id,
@@ -136,6 +146,7 @@ class _SubjectImpl extends Subject {
       requiredAttendance: requiredAttendance ?? this.requiredAttendance,
       absentCount: absentCount ?? this.absentCount,
       targetScore: targetScore is double? ? targetScore : this.targetScore,
+      color: color is String? ? color : this.color,
     );
   }
 }

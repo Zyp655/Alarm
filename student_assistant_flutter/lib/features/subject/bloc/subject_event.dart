@@ -11,3 +11,13 @@ class CreateSubject extends SubjectEvent {
   final Subject subject;
   CreateSubject(this.subject);
 }
+
+class UpdateSubject extends SubjectEvent{
+  final Subject subject;
+  UpdateSubject(this.subject);
+}
+
+class DeleteSubject extends SubjectEvent{
+  final int id;
+  DeleteSubject(this.id);
+}

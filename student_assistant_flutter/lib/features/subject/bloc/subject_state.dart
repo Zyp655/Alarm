@@ -7,6 +7,7 @@ abstract class SubjectState extends Equatable {
 
 class SubjectInitial extends SubjectState {}
 class SubjectLoading extends SubjectState {}
+
 class SubjectLoaded extends SubjectState {
   final List<Subject> subjects;
   SubjectLoaded(this.subjects);

@@ -9,7 +9,6 @@ part 'subject_state.dart';
 class SubjectBloc extends Bloc<SubjectEvent, SubjectState> {
   SubjectBloc() : super(SubjectInitial()) {
 
-
     on<LoadSubjects>((event, emit) async {
       emit(SubjectLoading());
       try {
@@ -26,6 +25,24 @@ class SubjectBloc extends Bloc<SubjectEvent, SubjectState> {
         add(LoadSubjects());
       } catch (e) {
         emit(SubjectError("Không thể thêm môn học"));
+      }
+    });
+
+    on<UpdateSubject>((event , emit) async{
+      try{
+        await client.subject.updateSubject(event.subject);
+        add(LoadSubjects());
+      }catch(e){
+        emit(SubjectError('Lỗi khi cập nhật :$e'));
+      }
+    });
+
+    on<DeleteSubject>((event,emit) async{
+      try{
+        await client.subject.deleteSubject(event.id);
+        add(LoadSubjects());
+      }catch(e){
+        emit(SubjectError('Lỗi khi xóa : $e'));
       }
     });
   }

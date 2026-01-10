@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_assistant_client/student_assistant_client.dart';
+import 'package:student_assistant_flutter/features/subject/views/subject_detail_screen.dart';
 import '../bloc/subject_bloc.dart';
 
 class SubjectScreen extends StatelessWidget {
@@ -22,8 +23,9 @@ class SubjectScreen extends StatelessWidget {
           if (state is SubjectLoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is SubjectLoaded) {
-            if (state.subjects.isEmpty)
+            if (state.subjects.isEmpty) {
               return Center(child: Text("Chưa có môn học nào"));
+            }
 
             return ListView.builder(
               itemCount: state.subjects.length,
@@ -37,9 +39,20 @@ class SubjectScreen extends StatelessWidget {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      "Tín chỉ: ${sub.credits} | GV: ${sub.teacherName ?? 'Chưa rõ'}",
+                      "Đã nghỉ: ${sub.absentCount}/${sub.requiredAttendance}",
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BlocProvider.value(
+                            value: context.read<SubjectBloc>(),
+                            child: SubjectDetailScreen(subject: sub),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 );
               },
