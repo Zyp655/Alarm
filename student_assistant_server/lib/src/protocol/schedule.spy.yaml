@@ -1,0 +1,10 @@
+class: Schedule
+table: schedule
+fields:
+  subjectId: int
+  subject: Subject?, relation(field=subjectId)
+  startTime: DateTime
+  endTime: DateTime
+  room: String?
+  description: String?
+  isExam: bool
