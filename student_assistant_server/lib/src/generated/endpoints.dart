@@ -20,8 +20,9 @@ import 'package:student_assistant_server/src/generated/schedule.dart' as _i7;
 import 'package:student_assistant_server/src/generated/subject.dart' as _i8;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _i9;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i10;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i10;
+    as _i11;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -445,7 +446,8 @@ class Endpoints extends _i1.EndpointDispatch {
     );
     modules['serverpod_auth_idp'] = _i9.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i10.Endpoints()
+    modules['serverpod_auth'] = _i10.Endpoints()..initializeEndpoints(server);
+    modules['serverpod_auth_core'] = _i11.Endpoints()
       ..initializeEndpoints(server);
   }
 }

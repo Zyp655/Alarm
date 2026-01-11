@@ -20,7 +20,8 @@ import 'package:student_assistant_client/src/protocol/schedule.dart' as _i5;
 import 'package:student_assistant_client/src/protocol/subject.dart' as _i6;
 import 'package:student_assistant_client/src/protocol/greetings/greeting.dart'
     as _i7;
-import 'protocol.dart' as _i8;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i8;
+import 'protocol.dart' as _i9;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -337,10 +338,13 @@ class EndpointGreeting extends _i2.EndpointRef {
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i1.Caller(client);
+    auth = _i8.Caller(client);
     serverpod_auth_core = _i4.Caller(client);
   }
 
   late final _i1.Caller serverpod_auth_idp;
+
+  late final _i8.Caller auth;
 
   late final _i4.Caller serverpod_auth_core;
 }
@@ -365,7 +369,7 @@ class Client extends _i2.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i8.Protocol(),
+         _i9.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -406,6 +410,7 @@ class Client extends _i2.ServerpodClientShared {
   @override
   Map<String, _i2.ModuleEndpointCaller> get moduleLookup => {
     'serverpod_auth_idp': modules.serverpod_auth_idp,
+    'auth': modules.auth,
     'serverpod_auth_core': modules.serverpod_auth_core,
   };
 }

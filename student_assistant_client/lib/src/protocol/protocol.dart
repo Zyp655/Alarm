@@ -18,8 +18,9 @@ import 'package:student_assistant_client/src/protocol/schedule.dart' as _i5;
 import 'package:student_assistant_client/src/protocol/subject.dart' as _i6;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i7;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i8;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i8;
+    as _i9;
 export 'greetings/greeting.dart';
 export 'schedule.dart';
 export 'subject.dart';
@@ -91,6 +92,9 @@ class Protocol extends _i1.SerializationManager {
     try {
       return _i8.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _i9.Protocol().deserialize<T>(data, t);
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
 
@@ -129,6 +133,10 @@ class Protocol extends _i1.SerializationManager {
     }
     className = _i8.Protocol().getClassNameForObject(data);
     if (className != null) {
+      return 'serverpod_auth.$className';
+    }
+    className = _i9.Protocol().getClassNameForObject(data);
+    if (className != null) {
       return 'serverpod_auth_core.$className';
     }
     return null;
@@ -153,9 +161,13 @@ class Protocol extends _i1.SerializationManager {
       data['className'] = dataClassName.substring(19);
       return _i7.Protocol().deserializeByClassName(data);
     }
+    if (dataClassName.startsWith('serverpod_auth.')) {
+      data['className'] = dataClassName.substring(15);
+      return _i8.Protocol().deserializeByClassName(data);
+    }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i8.Protocol().deserializeByClassName(data);
+      return _i9.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
