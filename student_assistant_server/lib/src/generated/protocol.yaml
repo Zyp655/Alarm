@@ -8,6 +8,10 @@ emailIdp:
   - finishPasswordReset:
 jwtRefresh:
   - refreshAccessToken:
+schedule:
+  - getSchedules:
+  - addSchedule:
+  - deleteSchedule:
 subject:
   - getSubjects:
   - addSubject:

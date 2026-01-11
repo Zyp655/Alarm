@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="images">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/student_assistant_flutter/build/app/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/flutter_assets/packages/serverpod_auth_idp_flutter/assets/images/apple.svg.jar!/" />
+      <root url="jar://$PROJECT_DIR$/student_assistant_flutter/build/app/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/flutter_assets/packages/serverpod_auth_idp_flutter/assets/images/google.svg.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

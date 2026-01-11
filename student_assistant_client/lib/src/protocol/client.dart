@@ -16,10 +16,11 @@ import 'package:serverpod_client/serverpod_client.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
-import 'package:student_assistant_client/src/protocol/subject.dart' as _i5;
+import 'package:student_assistant_client/src/protocol/schedule.dart' as _i5;
+import 'package:student_assistant_client/src/protocol/subject.dart' as _i6;
 import 'package:student_assistant_client/src/protocol/greetings/greeting.dart'
-    as _i6;
-import 'protocol.dart' as _i7;
+    as _i7;
+import 'protocol.dart' as _i8;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -236,34 +237,72 @@ class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
 }
 
 /// {@category Endpoint}
+class EndpointSchedule extends _i2.EndpointRef {
+  EndpointSchedule(_i2.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'schedule';
+
+  _i3.Future<List<_i5.Schedule>> getSchedules(
+    DateTime from,
+    DateTime to,
+  ) => caller.callServerEndpoint<List<_i5.Schedule>>(
+    'schedule',
+    'getSchedules',
+    {
+      'from': from,
+      'to': to,
+    },
+  );
+
+  _i3.Future<String?> addSchedule(
+    _i5.Schedule schedule,
+    int repeatWeeks,
+  ) => caller.callServerEndpoint<String?>(
+    'schedule',
+    'addSchedule',
+    {
+      'schedule': schedule,
+      'repeatWeeks': repeatWeeks,
+    },
+  );
+
+  _i3.Future<void> deleteSchedule(int id) => caller.callServerEndpoint<void>(
+    'schedule',
+    'deleteSchedule',
+    {'id': id},
+  );
+}
+
+/// {@category Endpoint}
 class EndpointSubject extends _i2.EndpointRef {
   EndpointSubject(_i2.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'subject';
 
-  _i3.Future<List<_i5.Subject>> getSubjects() =>
-      caller.callServerEndpoint<List<_i5.Subject>>(
+  _i3.Future<List<_i6.Subject>> getSubjects() =>
+      caller.callServerEndpoint<List<_i6.Subject>>(
         'subject',
         'getSubjects',
         {},
       );
 
-  _i3.Future<bool> addSubject(_i5.Subject subject) =>
+  _i3.Future<bool> addSubject(_i6.Subject subject) =>
       caller.callServerEndpoint<bool>(
         'subject',
         'addSubject',
         {'subject': subject},
       );
 
-  _i3.Future<void> updateAbsence(_i5.Subject subject) =>
+  _i3.Future<void> updateAbsence(_i6.Subject subject) =>
       caller.callServerEndpoint<void>(
         'subject',
         'updateAbsence',
         {'subject': subject},
       );
 
-  _i3.Future<bool> updateSubject(_i5.Subject subject) =>
+  _i3.Future<bool> updateSubject(_i6.Subject subject) =>
       caller.callServerEndpoint<bool>(
         'subject',
         'updateSubject',
@@ -287,8 +326,8 @@ class EndpointGreeting extends _i2.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i3.Future<_i6.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i6.Greeting>(
+  _i3.Future<_i7.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i7.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -326,7 +365,7 @@ class Client extends _i2.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i7.Protocol(),
+         _i8.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -337,6 +376,7 @@ class Client extends _i2.ServerpodClientShared {
        ) {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    schedule = EndpointSchedule(this);
     subject = EndpointSubject(this);
     greeting = EndpointGreeting(this);
     modules = Modules(this);
@@ -345,6 +385,8 @@ class Client extends _i2.ServerpodClientShared {
   late final EndpointEmailIdp emailIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
+
+  late final EndpointSchedule schedule;
 
   late final EndpointSubject subject;
 
@@ -356,6 +398,7 @@ class Client extends _i2.ServerpodClientShared {
   Map<String, _i2.EndpointRef> get endpointRefLookup => {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'schedule': schedule,
     'subject': subject,
     'greeting': greeting,
   };

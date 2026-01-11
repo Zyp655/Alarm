@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="feature-sign_in_with_apple">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/student_assistant_flutter/build/sign_in_with_apple/intermediates/merged_java_res/debug/mergeDebugJavaResource/feature-sign_in_with_apple.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

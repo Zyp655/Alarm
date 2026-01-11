@@ -13,13 +13,15 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../auth/email_idp_endpoint.dart' as _i2;
 import '../auth/jwt_refresh_endpoint.dart' as _i3;
-import '../endpoints/subject_endpoint.dart' as _i4;
-import '../greetings/greeting_endpoint.dart' as _i5;
-import 'package:student_assistant_server/src/generated/subject.dart' as _i6;
+import '../endpoints/schedule_endpoint.dart' as _i4;
+import '../endpoints/subject_endpoint.dart' as _i5;
+import '../greetings/greeting_endpoint.dart' as _i6;
+import 'package:student_assistant_server/src/generated/schedule.dart' as _i7;
+import 'package:student_assistant_server/src/generated/subject.dart' as _i8;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i7;
+    as _i9;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i8;
+    as _i10;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -37,13 +39,19 @@ class Endpoints extends _i1.EndpointDispatch {
           'jwtRefresh',
           null,
         ),
-      'subject': _i4.SubjectEndpoint()
+      'schedule': _i4.ScheduleEndpoint()
+        ..initialize(
+          server,
+          'schedule',
+          null,
+        ),
+      'subject': _i5.SubjectEndpoint()
         ..initialize(
           server,
           'subject',
           null,
         ),
-      'greeting': _i5.GreetingEndpoint()
+      'greeting': _i6.GreetingEndpoint()
         ..initialize(
           server,
           'greeting',
@@ -244,6 +252,81 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+    connectors['schedule'] = _i1.EndpointConnector(
+      name: 'schedule',
+      endpoint: endpoints['schedule']!,
+      methodConnectors: {
+        'getSchedules': _i1.MethodConnector(
+          name: 'getSchedules',
+          params: {
+            'from': _i1.ParameterDescription(
+              name: 'from',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'to': _i1.ParameterDescription(
+              name: 'to',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['schedule'] as _i4.ScheduleEndpoint).getSchedules(
+                    session,
+                    params['from'],
+                    params['to'],
+                  ),
+        ),
+        'addSchedule': _i1.MethodConnector(
+          name: 'addSchedule',
+          params: {
+            'schedule': _i1.ParameterDescription(
+              name: 'schedule',
+              type: _i1.getType<_i7.Schedule>(),
+              nullable: false,
+            ),
+            'repeatWeeks': _i1.ParameterDescription(
+              name: 'repeatWeeks',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['schedule'] as _i4.ScheduleEndpoint).addSchedule(
+                    session,
+                    params['schedule'],
+                    params['repeatWeeks'],
+                  ),
+        ),
+        'deleteSchedule': _i1.MethodConnector(
+          name: 'deleteSchedule',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['schedule'] as _i4.ScheduleEndpoint)
+                  .deleteSchedule(
+                    session,
+                    params['id'],
+                  ),
+        ),
+      },
+    );
     connectors['subject'] = _i1.EndpointConnector(
       name: 'subject',
       endpoint: endpoints['subject']!,
@@ -255,7 +338,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['subject'] as _i4.SubjectEndpoint)
+              ) async => (endpoints['subject'] as _i5.SubjectEndpoint)
                   .getSubjects(session),
         ),
         'addSubject': _i1.MethodConnector(
@@ -263,7 +346,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'subject': _i1.ParameterDescription(
               name: 'subject',
-              type: _i1.getType<_i6.Subject>(),
+              type: _i1.getType<_i8.Subject>(),
               nullable: false,
             ),
           },
@@ -272,7 +355,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['subject'] as _i4.SubjectEndpoint).addSubject(
+                  (endpoints['subject'] as _i5.SubjectEndpoint).addSubject(
                     session,
                     params['subject'],
                   ),
@@ -282,7 +365,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'subject': _i1.ParameterDescription(
               name: 'subject',
-              type: _i1.getType<_i6.Subject>(),
+              type: _i1.getType<_i8.Subject>(),
               nullable: false,
             ),
           },
@@ -291,7 +374,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['subject'] as _i4.SubjectEndpoint).updateAbsence(
+                  (endpoints['subject'] as _i5.SubjectEndpoint).updateAbsence(
                     session,
                     params['subject'],
                   ),
@@ -301,7 +384,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'subject': _i1.ParameterDescription(
               name: 'subject',
-              type: _i1.getType<_i6.Subject>(),
+              type: _i1.getType<_i8.Subject>(),
               nullable: false,
             ),
           },
@@ -310,7 +393,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['subject'] as _i4.SubjectEndpoint).updateSubject(
+                  (endpoints['subject'] as _i5.SubjectEndpoint).updateSubject(
                     session,
                     params['subject'],
                   ),
@@ -329,7 +412,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['subject'] as _i4.SubjectEndpoint).deleteSubject(
+                  (endpoints['subject'] as _i5.SubjectEndpoint).deleteSubject(
                     session,
                     params['id'],
                   ),
@@ -353,16 +436,16 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['greeting'] as _i5.GreetingEndpoint).hello(
+              ) async => (endpoints['greeting'] as _i6.GreetingEndpoint).hello(
                 session,
                 params['name'],
               ),
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i7.Endpoints()
+    modules['serverpod_auth_idp'] = _i9.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i8.Endpoints()
+    modules['serverpod_auth_core'] = _i10.Endpoints()
       ..initializeEndpoints(server);
   }
 }

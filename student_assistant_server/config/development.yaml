@@ -57,3 +57,13 @@ sessionLogs:
 #futureCall:
 #  concurrencyLimit: 1 # Defaults to 1, a negative or null value removes the limit
 #  scanInterval: 5000 # Unit in milliseconds, defaults to 5000
+auth:
+  google:
+    clientId: "327339877205-2cteb53v4dp3s68il3lf70fl8ttjs6tg.apps.googleusercontent.com"
+  email:
+    senderEmail: "nguyendinhminhhieu03@gmail.com"
+    senderName: "Student Assistant Support"
+    host: "smtp.gmail.com"
+    port: 587
+    user: "nguyendinhminhhieu03@gmail.com"
+    password: "qogi psls grfx icle"

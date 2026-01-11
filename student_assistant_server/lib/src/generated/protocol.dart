@@ -17,9 +17,12 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
 import 'greetings/greeting.dart' as _i5;
-import 'subject.dart' as _i6;
-import 'package:student_assistant_server/src/generated/subject.dart' as _i7;
+import 'schedule.dart' as _i6;
+import 'subject.dart' as _i7;
+import 'package:student_assistant_server/src/generated/schedule.dart' as _i8;
+import 'package:student_assistant_server/src/generated/subject.dart' as _i9;
 export 'greetings/greeting.dart';
+export 'schedule.dart';
 export 'subject.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
@@ -30,6 +33,85 @@ class Protocol extends _i1.SerializationManagerServer {
   static final Protocol _instance = Protocol._();
 
   static final List<_i2.TableDefinition> targetTableDefinitions = [
+    _i2.TableDefinition(
+      name: 'schedule',
+      dartName: 'Schedule',
+      schema: 'public',
+      module: 'student_assistant',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'schedule_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'subjectId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'startTime',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'endTime',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'room',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'description',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isExam',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'schedule_fk_0',
+          columns: ['subjectId'],
+          referenceTable: 'subject',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'schedule_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
     _i2.TableDefinition(
       name: 'subject',
       dartName: 'Subject',
@@ -78,6 +160,12 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.doublePrecision,
           isNullable: true,
           dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'color',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
         ),
       ],
       foreignKeys: [],
@@ -133,17 +221,27 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i5.Greeting) {
       return _i5.Greeting.fromJson(data) as T;
     }
-    if (t == _i6.Subject) {
-      return _i6.Subject.fromJson(data) as T;
+    if (t == _i6.Schedule) {
+      return _i6.Schedule.fromJson(data) as T;
+    }
+    if (t == _i7.Subject) {
+      return _i7.Subject.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Greeting?>()) {
       return (data != null ? _i5.Greeting.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i6.Subject?>()) {
-      return (data != null ? _i6.Subject.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i6.Schedule?>()) {
+      return (data != null ? _i6.Schedule.fromJson(data) : null) as T;
     }
-    if (t == List<_i7.Subject>) {
-      return (data as List).map((e) => deserialize<_i7.Subject>(e)).toList()
+    if (t == _i1.getType<_i7.Subject?>()) {
+      return (data != null ? _i7.Subject.fromJson(data) : null) as T;
+    }
+    if (t == List<_i8.Schedule>) {
+      return (data as List).map((e) => deserialize<_i8.Schedule>(e)).toList()
+          as T;
+    }
+    if (t == List<_i9.Subject>) {
+      return (data as List).map((e) => deserialize<_i9.Subject>(e)).toList()
           as T;
     }
     try {
@@ -161,7 +259,8 @@ class Protocol extends _i1.SerializationManagerServer {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _i5.Greeting => 'Greeting',
-      _i6.Subject => 'Subject',
+      _i6.Schedule => 'Schedule',
+      _i7.Subject => 'Subject',
       _ => null,
     };
   }
@@ -181,7 +280,9 @@ class Protocol extends _i1.SerializationManagerServer {
     switch (data) {
       case _i5.Greeting():
         return 'Greeting';
-      case _i6.Subject():
+      case _i6.Schedule():
+        return 'Schedule';
+      case _i7.Subject():
         return 'Subject';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -208,8 +309,11 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Greeting') {
       return deserialize<_i5.Greeting>(data['data']);
     }
+    if (dataClassName == 'Schedule') {
+      return deserialize<_i6.Schedule>(data['data']);
+    }
     if (dataClassName == 'Subject') {
-      return deserialize<_i6.Subject>(data['data']);
+      return deserialize<_i7.Subject>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -247,8 +351,10 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
     switch (t) {
-      case _i6.Subject:
-        return _i6.Subject.t;
+      case _i6.Schedule:
+        return _i6.Schedule.t;
+      case _i7.Subject:
+        return _i7.Subject.t;
     }
     return null;
   }
