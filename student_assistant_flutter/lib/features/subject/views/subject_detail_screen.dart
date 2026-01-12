@@ -25,26 +25,34 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
   Widget build(BuildContext context) {
     bool isDanger =
         _currentSubject.absentCount >= _currentSubject.requiredAttendance;
-    double progress =
-        _currentSubject.absentCount / _currentSubject.requiredAttendance;
+
+    double progress = 0.0;
+    if (_currentSubject.requiredAttendance > 0) {
+      progress =
+          _currentSubject.absentCount / _currentSubject.requiredAttendance;
+      if (progress > 1.0) progress = 1.0;
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(_currentSubject.name),
         actions: [
           IconButton(
-            icon: Icon(Icons.delete, color: Colors.red),
+            icon: const Icon(Icons.delete, color: Colors.red),
             onPressed: () => _confirmDelete(context),
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
               elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -54,30 +62,33 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                       children: [
                         Text(
                           "Tín chỉ: ${_currentSubject.credits}",
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                         Text(
                           "GV: ${_currentSubject.teacherName ?? 'Chưa rõ'}",
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       "Tình trạng chuyên cần",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    LinearProgressIndicator(
-                      value: progress > 1 ? 1 : progress,
-                      color: isDanger ? Colors.red : Colors.green,
-                      backgroundColor: Colors.grey[300],
-                      minHeight: 10,
+                    const SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        color: isDanger ? Colors.red : Colors.green,
+                        backgroundColor: Colors.grey[300],
+                        minHeight: 12,
+                      ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Text(
                       "Đã nghỉ: ${_currentSubject.absentCount} / ${_currentSubject.requiredAttendance} buổi",
                       style: TextStyle(
@@ -89,30 +100,35 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                       ),
                     ),
                     if (isDanger)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          "CẢNH BÁO: Bạn đã nghỉ quá số buổi!",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.warning, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text(
+                              "CẢNH BÁO: Quá số buổi nghỉ!",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                   ],
                 ),
               ),
             ),
-
-            SizedBox(height: 30),
-            Center(
+            const SizedBox(height: 30),
+            const Center(
               child: Text(
                 "Cập nhật nhanh",
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ),
-            SizedBox(height: 10),
-
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -120,19 +136,33 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                   onPressed: _currentSubject.absentCount > 0
                       ? () => _updateAbsence(-1)
                       : null,
-                  icon: Icon(Icons.remove),
-                  label: Text("Giảm nghỉ"),
+                  icon: const Icon(Icons.remove, color: Colors.white),
+                  label: const Text(
+                    "Giảm",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
                   ),
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 ElevatedButton.icon(
                   onPressed: () => _updateAbsence(1),
-                  icon: Icon(Icons.add),
-                  label: Text("Vắng học hôm nay"),
+                  icon: const Icon(Icons.add, color: Colors.white),
+                  label: const Text(
+                    "Vắng hôm nay",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
                   ),
                 ),
               ],
@@ -144,20 +174,30 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
   }
 
   void _updateAbsence(int change) {
+    final newCount = _currentSubject.absentCount + change;
+
+    final updatedSubject = _currentSubject.copyWith(
+      absentCount: newCount,
+    );
+
     setState(() {
-      _currentSubject.absentCount += change;
+      _currentSubject = updatedSubject;
     });
-    context.read<SubjectBloc>().add(UpdateSubject(_currentSubject));
+
+    context.read<SubjectBloc>().add(UpdateSubject(updatedSubject));
   }
 
   void _confirmDelete(BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text("Xác nhận xóa"),
+        title: const Text("Xác nhận xóa"),
         content: Text("Bạn có chắc muốn xóa môn ${_currentSubject.name}?"),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text("Hủy")),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Hủy"),
+          ),
           TextButton(
             onPressed: () {
               if (_currentSubject.id != null) {
@@ -168,7 +208,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
               Navigator.pop(ctx);
               Navigator.pop(context);
             },
-            child: Text("Xóa", style: TextStyle(color: Colors.red)),
+            child: const Text("Xóa", style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

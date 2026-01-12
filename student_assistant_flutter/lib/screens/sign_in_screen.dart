@@ -52,6 +52,12 @@ class SignInScreen extends StatelessWidget {
                   onSignedIn: () {
                     Navigator.pushReplacementNamed(context, AppRoutes.home);
                   },
+                  onFailure: () {
+                    print("Đăng nhập thất bại!");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Đăng nhập Google thất bại. Kiểm tra cấu hình Console.")),
+                    );
+                  },
                 ),
               ],
             ),

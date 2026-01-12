@@ -34,7 +34,6 @@ class AppRoutes {
             settings: settings,
           );
         }
-        return _errorRoute();
 
       case root:
         return MaterialPageRoute(

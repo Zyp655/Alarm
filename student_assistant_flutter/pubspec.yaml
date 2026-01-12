@@ -39,6 +39,8 @@ dependencies:
   serverpod_auth_shared_flutter: 3.1.1
   serverpod_auth_email_flutter: 3.1.1
   serverpod_auth_google_flutter: 3.1.1
+  circular_profile_avatar: 2.0.5
+
 dev_dependencies:
   flutter_lints: '>=3.0.0 <7.0.0'
   flutter_test:
@@ -68,8 +70,14 @@ flutter:
   assets:
     - assets/config.json
 dependency_overrides:
-  flutter_secure_storage: ^10.0.0
-  google_sign_in: ^7.2.0
+  flutter_secure_storage: ^9.0.0
+
+  google_sign_in: 6.2.2
+
+  google_sign_in_android: 6.1.36
+
+  google_sign_in_web: 0.12.4
+  web: 1.1.0
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
