@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../features/subject/views/subject_screen.dart';
 import '../features/subject/views/subject_detail_screen.dart';
+import '../screens/main_screen.dart';
 import '../screens/sign_in_screen.dart';
 import 'package:student_assistant_client/student_assistant_client.dart';
 
