@@ -1,3 +1,6 @@
 {
-    "apiUrl": "http://10.0.2.2:8000"
+  "apiUrl": "http://10.0.2.2:8080",
+  "googleClientId": "327339877205-2cteb53v4dp3s68il3lf70fl8ttjs6tg.apps.googleusercontent.com",
+  "googleServerClientId": "327339877205-2cteb53v4dp3s68il3lf70fl8ttjs6tg.apps.googleusercontent.com",
+  "googleRedirectUri": "http://localhost:8082/googlesignin"
 }
