@@ -44,6 +44,7 @@ class AppRoutes {
       default:
         return _errorRoute();
     }
+    return null;
   }
 
   static Route<dynamic> _errorRoute() {
