@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:serverpod_auth_email_flutter/serverpod_auth_email_flutter.dart';
 import 'package:serverpod_auth_google_flutter/serverpod_auth_google_flutter.dart';
 import '../core/dependencies.dart';
-import '../main.dart';
 import '../config/app_routes.dart';
 
 class SignInScreen extends StatelessWidget {

@@ -15,7 +15,7 @@ import 'screens/sign_in_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final config = await AppConfig.loadConfig();
+  config = await AppConfig.loadConfig();
 
   final keyManager = FlutterAuthenticationKeyManager();
 
