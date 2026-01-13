@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:student_assistant_client/student_assistant_client.dart';
 import '../bloc/schedule_bloc.dart';
 import 'add_schedule_screen.dart';
 

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:student_assistant_client/student_assistant_client.dart';
 
 class AddScheduleDialog extends StatefulWidget {
-  final Function(Schedule, int) onSubmit;
+  final Function(Schedule schedule, int repeatWeeks) onSubmit;
 
   const AddScheduleDialog({super.key, required this.onSubmit});
 
@@ -13,15 +13,20 @@ class AddScheduleDialog extends StatefulWidget {
 
 class _AddScheduleDialogState extends State<AddScheduleDialog> {
   final _formKey = GlobalKey<FormState>();
+  final _subjectController = TextEditingController();
+  final _roomController = TextEditingController();
 
-  int? _subjectId;
-  String? _room;
-  String? _description;
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _startTime = const TimeOfDay(hour: 7, minute: 0);
   TimeOfDay _endTime = const TimeOfDay(hour: 9, minute: 0);
   int _repeatWeeks = 1;
-  bool _isExam = false;
+
+  @override
+  void dispose() {
+    _subjectController.dispose();
+    _roomController.dispose();
+    super.dispose();
+  }
 
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
@@ -30,7 +35,9 @@ class _AddScheduleDialogState extends State<AddScheduleDialog> {
       firstDate: DateTime(2020),
       lastDate: DateTime(2030),
     );
-    if (picked != null) setState(() => _selectedDate = picked);
+    if (picked != null) {
+      setState(() => _selectedDate = picked);
+    }
   }
 
   Future<void> _pickTime(bool isStart) async {
@@ -40,51 +47,12 @@ class _AddScheduleDialogState extends State<AddScheduleDialog> {
     );
     if (picked != null) {
       setState(() {
-        if (isStart)
+        if (isStart) {
           _startTime = picked;
-        else
+        } else {
           _endTime = picked;
+        }
       });
-    }
-  }
-
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      final startDateTime = DateTime(
-        _selectedDate.year,
-        _selectedDate.month,
-        _selectedDate.day,
-        _startTime.hour,
-        _startTime.minute,
-      );
-
-      final endDateTime = DateTime(
-        _selectedDate.year,
-        _selectedDate.month,
-        _selectedDate.day,
-        _endTime.hour,
-        _endTime.minute,
-      );
-
-      if (endDateTime.isBefore(startDateTime)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Giờ kết thúc phải sau giờ bắt đầu')),
-        );
-        return;
-      }
-
-      final schedule = Schedule(
-        subjectId: _subjectId ?? 1,
-        startTime: startDateTime,
-        endTime: endDateTime,
-        room: _room,
-        description: _description,
-        isExam: _isExam,
-      );
-
-      widget.onSubmit(schedule, _repeatWeeks);
     }
   }
 
@@ -93,7 +61,7 @@ class _AddScheduleDialogState extends State<AddScheduleDialog> {
     final dateFormat = DateFormat('dd/MM/yyyy');
 
     return AlertDialog(
-      title: const Text('Thêm Lịch Học'),
+      title: const Text('Thêm lịch học'),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -101,63 +69,92 @@ class _AddScheduleDialogState extends State<AddScheduleDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Mã Môn Học (ID)'),
-                keyboardType: TextInputType.number,
-                validator: (v) => v!.isEmpty ? 'Nhập ID môn học' : null,
-                onSaved: (v) => _subjectId = int.tryParse(v!),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Phòng học'),
-                onSaved: (v) => _room = v,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text('Ngày: ${dateFormat.format(_selectedDate)}'),
-                  ),
-                  TextButton(
-                    onPressed: _pickDate,
-                    child: const Text('Chọn'),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text('Bắt đầu: ${_startTime.format(context)}'),
-                  ),
-                  TextButton(
-                    onPressed: () => _pickTime(true),
-                    child: const Text('Sửa'),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text('Kết thúc: ${_endTime.format(context)}'),
-                  ),
-                  TextButton(
-                    onPressed: () => _pickTime(false),
-                    child: const Text('Sửa'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                initialValue: '1',
+                controller: _subjectController,
                 decoration: const InputDecoration(
-                  labelText: 'Lặp lại (số tuần)',
-                  helperText: 'Nhập 1 nếu chỉ học 1 buổi',
+                  labelText: 'Tên môn học',
+                  icon: Icon(Icons.book),
                 ),
-                keyboardType: TextInputType.number,
-                validator: (v) {
-                  final val = int.tryParse(v ?? '');
-                  if (val == null || val < 1) return 'Ít nhất 1 tuần';
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Vui lòng nhập tên môn';
+                  }
                   return null;
                 },
-                onSaved: (v) => _repeatWeeks = int.parse(v!),
+              ),
+
+              TextFormField(
+                controller: _roomController,
+                decoration: const InputDecoration(
+                  labelText: 'Phòng học',
+                  icon: Icon(Icons.room),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.calendar_today),
+                title: Text('Ngày: ${dateFormat.format(_selectedDate)}'),
+                onTap: _pickDate,
+              ),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => _pickTime(true),
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: 'Bắt đầu',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8,
+                              vertical: 4),
+                        ),
+                        child: Text(
+                          _startTime.format(context),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => _pickTime(false),
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: 'Kết thúc',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8,
+                              vertical: 4),
+                        ),
+                        child: Text(
+                          _endTime.format(context),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              DropdownButtonFormField<int>(
+                initialValue: _repeatWeeks,
+                decoration: const InputDecoration(
+                  labelText: 'Lặp lại',
+                  icon: Icon(Icons.repeat),
+                ),
+                items: const [
+                  DropdownMenuItem(value: 1, child: Text('Chỉ tuần này')),
+                  DropdownMenuItem(value: 2, child: Text('2 tuần')),
+                  DropdownMenuItem(value: 4, child: Text('4 tuần')),
+                  DropdownMenuItem(value: 5, child: Text('5 tuần')),
+                  DropdownMenuItem(value: 8, child: Text('8 tuần')),
+                  DropdownMenuItem(value: 10, child: Text('10 tuần')),
+                  DropdownMenuItem(value: 15, child: Text('15 tuần')),
+                ],
+                onChanged: (val) => setState(() => _repeatWeeks = val!),
               ),
             ],
           ),
@@ -169,10 +166,53 @@ class _AddScheduleDialogState extends State<AddScheduleDialog> {
           child: const Text('Hủy'),
         ),
         ElevatedButton(
-          onPressed: _submit,
+          onPressed: _onSave,
           child: const Text('Lưu'),
         ),
       ],
     );
+  }
+
+  void _onSave() {
+    if (_formKey.currentState!.validate()) {
+      final start = DateTime(
+        _selectedDate.year,
+        _selectedDate.month,
+        _selectedDate.day,
+        _startTime.hour,
+        _startTime.minute,
+      );
+
+      final end = DateTime(
+        _selectedDate.year,
+        _selectedDate.month,
+        _selectedDate.day,
+        _endTime.hour,
+        _endTime.minute,
+      );
+
+      if (end.isBefore(start)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Giờ kết thúc phải sau giờ bắt đầu')),
+        );
+        return;
+      }
+
+      final schedule = Schedule(
+        startTime: start,
+        endTime: end,
+        room: _roomController.text.isNotEmpty ? _roomController.text : null,
+        subjectId: 0,
+        isExam: false,
+        subject: Subject(
+          name: _subjectController.text,
+          credits: 3,
+          requiredAttendance: 0,
+          absentCount: 0,
+          teacherName: '',
+        ),
+      );
+      widget.onSubmit(schedule, _repeatWeeks);
+    }
   }
 }

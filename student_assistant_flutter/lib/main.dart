@@ -6,18 +6,16 @@ import 'package:student_assistant_client/student_assistant_client.dart';
 
 import 'config/app_config.dart';
 import 'config/app_routes.dart';
+import 'core/dependencies.dart';
 import 'features/subject/bloc/subject_bloc.dart';
 import 'features/schedule/bloc/schedule_bloc.dart';
 import 'screens/main_screen.dart';
 import 'screens/sign_in_screen.dart';
 
-late final Client client;
-late final AppConfig config;
-late final SessionManager sessionManager;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  config = await AppConfig.loadConfig();
+  final config = await AppConfig.loadConfig();
 
   final keyManager = FlutterAuthenticationKeyManager();
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'dart:io' show Platform;
 import '../features/schedule/views/schedule_screen.dart';
 import '../features/subject/views/subject_screen.dart';
-import '../../main.dart';
+import '../core/dependencies.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,6 +14,26 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _screens = [
+      SubjectScreen(),
+      const ScheduleScreen(),
+      _buildProfileTab(),
+    ];
+  }
+
+  String _fixImageUrl(String? url) {
+    if (url == null || url.isEmpty) return '';
+    if (Platform.isAndroid && url.contains('localhost')) {
+      return url.replaceFirst('localhost', '10.0.2.2');
+    }
+    return url;
+  }
 
   Widget _buildProfileTab() {
     final user = sessionManager.signedInUser;
@@ -22,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProfileAvatar(
-            user?.imageUrl ?? '',
+            _fixImageUrl(user?.imageUrl),
             radius: 60,
             backgroundColor: Colors.blue,
             borderWidth: 2,
@@ -36,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
             elevation: 5.0,
             cacheImage: true,
             showInitialTextAbovePicture: false,
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
           const SizedBox(height: 16),
           Text(
@@ -67,22 +89,25 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final screens = [
-      SubjectScreen(),
-      const ScheduleScreen(),
-      _buildProfileTab(),
-    ];
-
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: screens,
+        children: _screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Môn học'),
           BottomNavigationBarItem(
