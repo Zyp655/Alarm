@@ -7,11 +7,12 @@ import 'package:student_assistant_client/student_assistant_client.dart';
 import 'config/app_config.dart';
 import 'config/app_routes.dart';
 import 'core/dependencies.dart';
+// Import ThemeCubit vừa tạo
+import 'core/theme/theme_cubit.dart';
 import 'features/subject/bloc/subject_bloc.dart';
 import 'features/schedule/bloc/schedule_bloc.dart';
 import 'screens/main_screen.dart';
 import 'screens/sign_in_screen.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => ThemeCubit()),
         BlocProvider(
           create: (_) => SubjectBloc()..add(LoadSubjects()),
         ),
@@ -52,24 +54,50 @@ class MyApp extends StatelessWidget {
           },
         ),
       ],
-      child: MaterialApp(
-        title: 'Student Assistant',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          useMaterial3: true,
-        ),
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: AppRoutes.onGenerateRoute,
-        home: ListenableBuilder(
-          listenable: sessionManager,
-          builder: (context, child) {
-            if (sessionManager.signedInUser != null) {
-              return const MainScreen();
-            } else {
-              return const SignInScreen();
-            }
-          },
-        ),
+      child: BlocBuilder<ThemeCubit, bool>(
+        builder: (context, isDarkMode) {
+          return MaterialApp(
+            title: 'Student Assistant',
+            debugShowCheckedModeBanner: false,
+
+            themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              useMaterial3: true,
+              brightness: Brightness.light,
+              scaffoldBackgroundColor: Colors.grey[100],
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+              ),
+            ),
+
+            darkTheme: ThemeData(
+              primarySwatch: Colors.blue,
+              useMaterial3: true,
+              brightness: Brightness.dark,
+              scaffoldBackgroundColor: const Color(0xFF121212),
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Color(0xFF1F1F1F),
+                foregroundColor: Colors.white,
+              ),
+              cardColor: const Color(0xFF1E1E1E),
+            ),
+
+            onGenerateRoute: AppRoutes.onGenerateRoute,
+            home: ListenableBuilder(
+              listenable: sessionManager,
+              builder: (context, child) {
+                if (sessionManager.signedInUser != null) {
+                  return const MainScreen();
+                } else {
+                  return const SignInScreen();
+                }
+              },
+            ),
+          );
+        },
       ),
     );
   }
